@@ -47,7 +47,7 @@ def save_user(chat_id: str, user: User):
 
 
 def clear_user(chat_id: str):
-    path = os.path.join(database_dir, f'{chat_id}.txt')
+    path = os.path.join(database_dir, f'{chat_id}.json')
 
     if os.path.exists(path):
         os.remove(path)

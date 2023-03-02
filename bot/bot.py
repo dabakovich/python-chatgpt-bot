@@ -2,6 +2,7 @@ import logging
 
 from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters
 
+from handlers.clear_command_handler import clear_command_handler
 from handlers.start_command_handler import start_command_handler
 from handlers.text_message_handler import text_message_handler
 
@@ -17,6 +18,7 @@ def main() -> None:
     application = ApplicationBuilder().token(TELEGRAM_BOT_TOKEN).build()
 
     # Set up the start command handler
+    application.add_handler(CommandHandler("clear", clear_command_handler))
     application.add_handler(CommandHandler("start", start_command_handler))
     application.add_handler(MessageHandler(filters.TEXT, text_message_handler))
 
