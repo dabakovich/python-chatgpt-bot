@@ -26,7 +26,11 @@ def main() -> None:
     application.add_error_handler(error_handler)
 
     # Start the bot
-    application.run_polling()
+    # application.run_polling()
+    application.run_webhook(listen="0.0.0.0",
+                            port=500,
+                            url_path=TELEGRAM_BOT_TOKEN)
+    application.bot.setWebhook('https://python-chatgpt-bot.herokuapp.com/' + TELEGRAM_BOT_TOKEN)
 
 
 if __name__ == '__main__':
