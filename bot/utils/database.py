@@ -1,18 +1,12 @@
 import json
 import os
 
+from models.user import User
+
 database_dir = 'db'
 
 
-# ToDo: move to a shared place
-class User:
-    def __init__(self):
-        self.messages = [
-            {"role": "system", "content": "You are a helpful assistant."},
-        ]
-
-
-def load_user(chat_id: str):
+def load_user(chat_id: int):
     path = os.path.join(database_dir, f'{chat_id}.json')
 
     if not os.path.exists(path):
@@ -32,7 +26,7 @@ def load_user(chat_id: str):
         return user
 
 
-def save_user(chat_id: str, user: User):
+def save_user(chat_id: int, user: User):
     path = os.path.join(database_dir, f'{chat_id}.json')
 
     with open(path, 'w') as f:
@@ -46,7 +40,7 @@ def save_user(chat_id: str, user: User):
         f.write(json_str)
 
 
-def clear_user(chat_id: str):
+def clear_user(chat_id: int):
     path = os.path.join(database_dir, f'{chat_id}.json')
 
     if os.path.exists(path):
