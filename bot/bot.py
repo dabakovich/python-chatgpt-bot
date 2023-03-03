@@ -3,6 +3,7 @@ import logging
 from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters
 
 from handlers.clear_command_handler import clear_command_handler
+from handlers.error_handler import error_handler
 from handlers.start_command_handler import start_command_handler
 from handlers.text_message_handler import text_message_handler
 
@@ -21,6 +22,8 @@ def main() -> None:
     application.add_handler(CommandHandler("clear", clear_command_handler))
     application.add_handler(CommandHandler("start", start_command_handler))
     application.add_handler(MessageHandler(filters.TEXT, text_message_handler))
+
+    application.add_error_handler(error_handler)
 
     # Start the bot
     application.run_polling()
