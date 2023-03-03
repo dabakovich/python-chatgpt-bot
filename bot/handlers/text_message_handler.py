@@ -3,7 +3,6 @@ import logging
 from telegram import Update
 from telegram.ext import ContextTypes
 
-# ToDo: fix this import
 from utils.database import load_user, save_user
 from utils.gpt import get_gpt_response
 

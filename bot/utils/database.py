@@ -1,47 +1,30 @@
-import json
-import os
+from pymongo import MongoClient
 
+from config import MONGO_URI, MONGO_DB_NAME
 from models.user import User
 
-database_dir = 'db'
+USERS_COLLECTION_NAME = 'users'  # replace with your collection name
+
+client = MongoClient(MONGO_URI)
+db = client[MONGO_DB_NAME]
+users_collection = db[USERS_COLLECTION_NAME]
 
 
 def load_user(chat_id: int):
-    path = os.path.join(database_dir, f'{chat_id}.json')
-
-    if not os.path.exists(path):
+    user_dict = users_collection.find_one({"chat_id": chat_id})
+    if user_dict is None:
         return User()
 
-    with open(path, 'r') as f:
-        json_str = f.read()
-
-        # reading json
-        data = json.loads(json_str)
-
-        # creating new user object
-        user = User()
-
-        # adding dict data to the created user object
-        user.__dict__.update(data)
-        return user
+    user = User()
+    user.__dict__.update(user_dict)
+    return user
 
 
 def save_user(chat_id: int, user: User):
-    path = os.path.join(database_dir, f'{chat_id}.json')
-
-    with open(path, 'w') as f:
-        # getting dict from the user object
-        data = user.__dict__
-
-        # converting it into JSON
-        json_str = json.dumps(data, indent=4, ensure_ascii=False)
-
-        # writing to the file
-        f.write(json_str)
+    user_dict = user.__dict__
+    user_dict['chat_id'] = chat_id
+    users_collection.replace_one({"chat_id": chat_id}, user_dict, upsert=True)
 
 
 def clear_user(chat_id: int):
-    path = os.path.join(database_dir, f'{chat_id}.json')
-
-    if os.path.exists(path):
-        os.remove(path)
+    users_collection.delete_one({"chat_id": chat_id})
