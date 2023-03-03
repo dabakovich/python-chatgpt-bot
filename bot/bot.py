@@ -7,7 +7,7 @@ from handlers.error_handler import error_handler
 from handlers.start_command_handler import start_command_handler
 from handlers.text_message_handler import text_message_handler
 
-from config import TELEGRAM_BOT_TOKEN
+from config import TELEGRAM_BOT_TOKEN, PORT
 
 # ToDo: add to shared util
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
@@ -28,7 +28,7 @@ def main() -> None:
     # Start the bot
     # application.run_polling()
     application.run_webhook(listen="0.0.0.0",
-                            port=500,
+                            port=PORT,
                             url_path=TELEGRAM_BOT_TOKEN)
     application.bot.setWebhook('https://python-chatgpt-bot.herokuapp.com/' + TELEGRAM_BOT_TOKEN)
 
