@@ -38,7 +38,7 @@ async def context_text(update: Update, context: CallbackContext):
     return ConversationHandler.END
 
 
-async def cancel_command(update: Update) -> int:
+async def cancel_command(update: Update, _context: CallbackContext) -> int:
     """Cancels and ends the conversation."""
     await update.message.reply_text(
         "Ok, initial context message will not be changed"
