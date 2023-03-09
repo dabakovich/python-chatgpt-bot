@@ -10,6 +10,10 @@ from utils.gpt import get_gpt_response
 
 
 async def text_message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    # exit if it's edited message update, we're not handling it yet
+    if update.edited_message is not None:
+        return
+
     chat_id = update.effective_chat.id
     text = update.message.text
 
