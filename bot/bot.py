@@ -1,13 +1,12 @@
 import logging
 
-from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters
-
-from handlers.clear_command_handler import clear_command_handler
-from handlers.error_handler import error_handler
-from handlers.start_command_handler import start_command_handler
-from handlers.text_message_handler import text_message_handler
+from telegram.ext import ApplicationBuilder
 
 from config import TELEGRAM_BOT_TOKEN, PORT, IS_USE_WEBHOOK_BOT
+from handlers.commands import clear_command_handler, start_command_handler
+from handlers.conversations import set_context_conversation_handler
+from handlers.error_handler import error_handler
+from handlers.messages import text_message_handler
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 
@@ -17,11 +16,15 @@ def main() -> None:
     # Create the Updater and pass it your bot's token.
     application = ApplicationBuilder().token(TELEGRAM_BOT_TOKEN).build()
 
-    # Set up the start command handler
-    application.add_handler(CommandHandler("clear", clear_command_handler))
-    application.add_handler(CommandHandler("start", start_command_handler))
-    application.add_handler(MessageHandler(filters.TEXT, text_message_handler))
+    # Set up command handlers
+    application.add_handler(clear_command_handler)
+    application.add_handler(set_context_conversation_handler)
+    application.add_handler(start_command_handler)
 
+    # Set up message handler. We're not handling edited message update yet
+    application.add_handler(text_message_handler)
+
+    # Set up unhandled error handler
     application.add_error_handler(error_handler)
 
     if IS_USE_WEBHOOK_BOT:

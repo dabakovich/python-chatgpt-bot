@@ -1,6 +1,9 @@
 .idea
+.fleet
 venv
 
 db
+
+__pycache__
 
 .env

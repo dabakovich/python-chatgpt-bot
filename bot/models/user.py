@@ -1,5 +1,5 @@
 class User:
-    def __init__(self):
+    def __init__(self, initial_context="You are a helpful assistant."):
         self.messages = [
-            {"role": "system", "content": "You are a helpful assistant."},
+            {"role": "system", "content": initial_context},
         ]

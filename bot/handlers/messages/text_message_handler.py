@@ -2,17 +2,17 @@ import logging
 
 from openai import InvalidRequestError
 from telegram import Update
-from telegram.ext import ContextTypes
+from telegram.ext import ContextTypes, MessageHandler, filters
 
 from constants import error_texts
 from database.database_manager import database
 from utils.gpt import get_gpt_response
 
 
-async def text_message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def on_text_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # exit if it's edited message update, we're not handling it yet
-    if update.edited_message is not None:
-        return
+    # if update.edited_message is not None:
+    #     return
 
     chat_id = update.effective_chat.id
     text = update.message.text
@@ -46,3 +46,6 @@ async def text_message_handler(update: Update, context: ContextTypes.DEFAULT_TYP
     database.save_user(chat_id, user)
 
     await context.bot.send_message(chat_id=chat_id, text=chatgpt_response.content)
+
+
+text_message_handler = MessageHandler(filters.TEXT & (~ filters.UpdateType.EDITED_MESSAGE), on_text_message)
