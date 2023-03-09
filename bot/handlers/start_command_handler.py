@@ -3,10 +3,7 @@ import logging
 from telegram import Update
 from telegram.ext import CallbackContext
 
-logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
-
-welcome_message = "Hello, it's your ChatGPT bot. Ask me anything you want. Type /clear to clear you context an start " \
-                  "new conversation."
+from constants import welcome_message
 
 
 # ToDo: add check for openai api key existence for a user

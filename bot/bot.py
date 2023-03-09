@@ -9,7 +9,6 @@ from handlers.text_message_handler import text_message_handler
 
 from config import TELEGRAM_BOT_TOKEN, PORT, IS_USE_WEBHOOK_BOT
 
-# ToDo: add to shared util
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 
 

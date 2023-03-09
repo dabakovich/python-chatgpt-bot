@@ -1,5 +1,5 @@
-import json
 import html
+import json
 import logging
 import traceback
 
@@ -7,10 +7,8 @@ from telegram import Update
 from telegram.constants import ParseMode
 from telegram.ext import CallbackContext
 
-from constants import error_texts
 from config import DEVELOPER_CHAT_ID
-
-logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
+from constants import error_texts
 
 
 async def error_handler(update: object, context: CallbackContext):

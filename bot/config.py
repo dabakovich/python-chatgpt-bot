@@ -13,3 +13,5 @@ IS_USE_MONGO_DB = bool(os.getenv("IS_USE_MONGO", True))
 IS_USE_WEBHOOK_BOT = bool(os.getenv("IS_USE_WEBHOOK_BOT", True))
 
 PORT = int(os.getenv('PORT', 5000))
+
+USE_MONGO_DB = True
