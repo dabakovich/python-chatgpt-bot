@@ -1,3 +1,5 @@
+default_initial_context = "You are a helpful assistant."
+
 welcome_message = "Hello, it's your ChatGPT bot. Ask me anything you want. Type /clear to clear you context an start " \
                   "new conversation."
 error_texts = {
