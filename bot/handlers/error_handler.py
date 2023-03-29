@@ -7,7 +7,7 @@ from telegram import Update
 from telegram.constants import ParseMode
 from telegram.ext import CallbackContext
 
-from config import DEVELOPER_CHAT_ID
+from config import ERRORS_CHAT_ID
 from constants import error_texts
 
 
@@ -37,5 +37,5 @@ async def error_handler(update: object, context: CallbackContext):
     )
 
     await context.bot.send_message(
-        chat_id=DEVELOPER_CHAT_ID, text=message, parse_mode=ParseMode.HTML
+        chat_id=ERRORS_CHAT_ID, text=message, parse_mode=ParseMode.HTML
     )
