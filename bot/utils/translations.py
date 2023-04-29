@@ -3,7 +3,10 @@ import os
 
 
 def load_translation(lang_code, key, default_lang_code="en"):
-    path = os.path.join("i18n", f"{lang_code}.json")
+    current_directory = os.path.dirname(os.path.abspath(__file__))
+    upper_directory = os.path.dirname(current_directory)
+
+    path = os.path.join(upper_directory, "i18n", f"{lang_code}.json")
 
     try:
         with open(path, "r", encoding="utf-8") as f:
