@@ -4,16 +4,13 @@ from openai import InvalidRequestError
 from telegram import Update
 from telegram.ext import ContextTypes, MessageHandler, filters
 
+from config import PREMIUM_CHAT_IDS
 from constants import error_texts
 from database.database_manager import database
 from utils.gpt import get_gpt_response
 
 
 async def on_text_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    # exit if it's edited message update, we're not handling it yet
-    # if update.edited_message is not None:
-    #     return
-
     chat_id = update.effective_chat.id
     text = update.message.text
 
@@ -27,8 +24,13 @@ async def on_text_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # Add the current message to the history
     user.messages.append({"role": 'user', "content": text})
 
+    # Check if the user is in premium list
+    is_premium = chat_id in PREMIUM_CHAT_IDS
+
+    logging.info(f"chat_id={chat_id}, is_premium={is_premium}")
+
     try:
-        chatgpt_response = get_gpt_response(user.messages)
+        chatgpt_response = get_gpt_response(user.messages, is_premium)
     except InvalidRequestError as e:
         logging.error(e.code)
 
