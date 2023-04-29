@@ -1,0 +1,9 @@
+{
+  "welcome_message": "Hello, it's your ChatGPT bot. Ask me anything you want. Type /clear to clear you context an start new conversation.",
+  "clear_message": "Your context was cleared, you can start new conversation.",
+  "send_system_message": "Please send the text that ChatGPT will use as a guide for behavior. Note that this will clear your context.",
+  "system_message_applied": "Your context message was successfully applied. Now you can start the conversation with ChatGPT.",
+  "system_message_cancel": "Ok, initial context message will not be changed.",
+  "context_length_exceeded_error": "Unfortunately, you reached the maximum conversation length, please start new using /clear command.",
+  "other_error": "Unfortunately, an error occurred, please try again later."
+}

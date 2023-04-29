@@ -8,7 +8,7 @@ from telegram.constants import ParseMode
 from telegram.ext import CallbackContext
 
 from config import ERRORS_CHAT_ID
-from constants import error_texts
+from utils.translations import load_translation
 
 
 async def error_handler(update: object, context: CallbackContext):
@@ -23,8 +23,9 @@ async def error_handler(update: object, context: CallbackContext):
 
     if isinstance(update, Update):
         chat_id = update.effective_chat.id
+        language_code = update.effective_user.language_code
 
-        await context.bot.send_message(chat_id=chat_id, text=error_texts.get('other_error'))
+        await context.bot.send_message(chat_id=chat_id, text=load_translation(language_code, 'other_error'))
 
     update_str = update.to_dict() if isinstance(update, Update) else str(update)
     message = (
