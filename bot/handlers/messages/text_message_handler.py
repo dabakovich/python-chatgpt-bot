@@ -21,6 +21,12 @@ async def on_text_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # Load the conversation history from file
     user = database.load_user(chat_id)
 
+    # Save JSON serialized of update.effective_user into user.user key
+    user.user = update.effective_user.to_dict()
+
+    # Save JSON serialized of update.effective_chat into user.chat key
+    user.chat = update.effective_chat.to_dict()
+
     # Add the current message to the history
     user.messages.append({"role": 'user', "content": text})
 
