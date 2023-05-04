@@ -6,7 +6,6 @@ from telegram.ext import CommandHandler, MessageHandler, ConversationHandler, fi
 
 from database.database_manager import database
 from enums import Commands
-from models.user import User
 from utils.translations import load_translation
 
 WAITING_FOR_CONTEXT_TEXT = "WAITING_FOR_CONTEXT_TEXT"
@@ -15,27 +14,39 @@ WAITING_FOR_CONTEXT_TEXT = "WAITING_FOR_CONTEXT_TEXT"
 async def set_context_command(update: Update, context: CallbackContext):
     """Handle the /set_context command."""
     chat_id = update.effective_chat.id
+    message_thread_id = update.effective_message.message_thread_id
     language_code = update.effective_user.language_code
 
     logging.info(f"chat_id={chat_id}")
 
-    await context.bot.send_message(chat_id=chat_id, text=load_translation(language_code, 'send_system_message'))
+    await context.bot.send_message(chat_id=chat_id,
+                                   message_thread_id=message_thread_id,
+                                   text=load_translation(language_code, 'send_system_message'))
 
     return WAITING_FOR_CONTEXT_TEXT
 
 
 async def context_text(update: Update, context: CallbackContext):
     chat_id = update.effective_chat.id
+    message_thread_id = update.effective_message.message_thread_id
     text = update.message.text
     language_code = update.effective_user.language_code
 
     logging.info(f"chat_id={chat_id}")
 
-    user = User(text)
+    chat = database.load_chat(chat_id)
 
-    database.save_user(chat_id, user)
+    if message_thread_id is None:
+        chat.messages = [{"role": "system", "content": text}]
+    else:
+        thread_info = update.effective_message.reply_to_message.forum_topic_created.to_dict()
+        chat.threads[str(message_thread_id)] = {"messages": [{"role": "system", "content": text}], "info": thread_info}
 
-    await context.bot.send_message(chat_id=chat_id, text=load_translation(language_code, 'system_message_applied'))
+    database.save_chat(chat_id, chat)
+
+    await context.bot.send_message(chat_id=chat_id,
+                                   message_thread_id=message_thread_id,
+                                   text=load_translation(language_code, 'system_message_applied'))
 
     return ConversationHandler.END
 
