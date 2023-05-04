@@ -37,7 +37,7 @@ async def on_text_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     logging.info(f"chat_id={chat_id}, is_premium={is_premium}")
 
     try:
-        chatgpt_response = get_gpt_response(user.messages, is_premium)
+        chatgpt_response = await get_gpt_response(user.messages, is_premium)
     except InvalidRequestError as e:
         logging.error(e.code)
 
@@ -58,4 +58,7 @@ async def on_text_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await context.bot.send_message(chat_id=chat_id, text=chatgpt_response.content)
 
 
-text_message_handler = MessageHandler(filters.TEXT & (~ filters.UpdateType.EDITED_MESSAGE), on_text_message)
+text_message_handler = MessageHandler(
+    filters.TEXT & (~ filters.UpdateType.EDITED_MESSAGE),
+    on_text_message,
+    block=False)

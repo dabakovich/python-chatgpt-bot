@@ -6,8 +6,8 @@ from config import OPENAI_API_KEY, GPT_MODEL_NAME, GPT_PREMIUM_MODEL_NAME
 openai.api_key = OPENAI_API_KEY
 
 
-def get_gpt_response(messages, is_premium=False):
-    response = openai.ChatCompletion.create(
+async def get_gpt_response(messages, is_premium=False):
+    response = await openai.ChatCompletion.acreate(
         model=GPT_PREMIUM_MODEL_NAME if is_premium else GPT_MODEL_NAME,
         messages=messages,
     )
