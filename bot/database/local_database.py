@@ -12,12 +12,12 @@ class LocalDatabase(database.Database):
         path = os.path.join(self.database_dir, f"{chat_id}.json")
 
         if not os.path.exists(path):
-            return Chat()
+            return Chat(chat_id)
 
         with open(path, "r") as f:
             json_str = f.read()
 
-            chat = Chat.from_json(json_str)
+            chat = Chat.from_json(chat_id, json_str)
 
             return chat
 

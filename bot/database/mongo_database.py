@@ -15,7 +15,7 @@ class MongoDatabase(database.Database):
     def load_chat(self, chat_id) -> Chat:
         chat_mapping = self.chats_collection.find_one({"chat_id": chat_id})
         if chat_mapping is None:
-            return Chat()
+            return Chat(chat_id)
 
         chat = Chat.from_dict(dict(chat_mapping))
         return chat

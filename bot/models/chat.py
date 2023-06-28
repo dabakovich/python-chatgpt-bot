@@ -11,10 +11,13 @@ from utils.helpers import generate_user_gpt_message
 
 class Chat:
     def __init__(self,
+                 chat_id: int,
                  info: ChatInfo = None,
                  users: Dict[str, TelegramUser] = None,
                  messages: list[GPTMessage] = None,
                  threads: Dict[str, ConversationBase] = None):
+        self.chat_id = chat_id
+
         # Chat info
         self.info = info
 
@@ -34,6 +37,7 @@ class Chat:
         message = update.effective_message
         message_thread_id = message.message_thread_id
 
+        self.chat_id = update.effective_chat.id
         self.info = update.effective_chat
         self.save_user(update.effective_user)
 
@@ -65,8 +69,11 @@ class Chat:
                 self.messages = [generate_system_gpt_message()]
             return self.messages
 
-    def get_thread(self, message_thread_id: int) -> ConversationBase:
+    def get_thread(self, message_thread_id: int):
         message_thread_id_str = str(message_thread_id)
+
+        if self.threads is None:
+            self.threads = {}
 
         if message_thread_id_str not in self.threads:
             self.threads[message_thread_id_str] = {}
@@ -88,6 +95,7 @@ class Chat:
                 users_dict[user_id] = user.to_dict()
 
         return {
+            "chat_id": self.chat_id,
             "info": self.info.to_dict() if self.info is not None else None,
             "users": users_dict,
             "messages": self.messages,
@@ -96,6 +104,7 @@ class Chat:
 
     @classmethod
     def from_dict(cls, chat_dict: dict) -> 'Chat':
+        chat_id = chat_dict.get('chat_id')
         info = ChatInfo.from_dict(chat_dict.get('info'))
 
         users_dict = chat_dict.get('users')
@@ -107,16 +116,16 @@ class Chat:
 
         messages = chat_dict.get('messages')
         threads = chat_dict.get('threads')
-        return cls(info=info, users=users, messages=messages, threads=threads)
+        return cls(chat_id=chat_id, info=info, users=users, messages=messages, threads=threads)
 
     def to_json(self) -> str:
         chat_dict = self.to_dict()
         return json.dumps(chat_dict, indent=4, ensure_ascii=False)
 
     @classmethod
-    def from_json(cls, chat_json: str) -> 'Chat':
+    def from_json(cls, chat_id: int, chat_json: str) -> 'Chat':
         if not chat_json:
-            return cls()
+            return cls(chat_id)
 
         chat_dict = json.loads(chat_json)
         return cls.from_dict(chat_dict)
