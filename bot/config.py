@@ -16,7 +16,7 @@ GPT_PREMIUM_MODEL_NAME = os.getenv("GPT_PREMIUM_MODEL_NAME")
 DEVELOPER_CHAT_ID = os.getenv("DEVELOPER_CHAT_ID")
 ERRORS_CHAT_ID = os.getenv("ERRORS_CHAT_ID")
 
-PREMIUM_CHAT_IDS = list(map(int, os.getenv("PREMIUM_CHAT_IDS", "").split(",")))
+PREMIUM_USER_IDS = list(map(int, os.getenv("PREMIUM_USER_IDS", "").split(",")))
 
 IS_USE_MONGO_DB = ast.literal_eval(os.getenv("IS_USE_MONGO_DB", "True"))
 IS_USE_WEBHOOK_BOT = ast.literal_eval(os.getenv("IS_USE_WEBHOOK_BOT", "True"))
