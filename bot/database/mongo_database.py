@@ -13,24 +13,14 @@ class MongoDatabase(database.Database):
         self.chats_collection = self.db[CHATS_MONGO_COLLECTION_NAME]
 
     def load_chat(self, chat_id) -> Chat:
-        chat_dict = self.chats_collection.find_one({"chat_id": chat_id})
-        if chat_dict is None:
+        chat_mapping = self.chats_collection.find_one({"chat_id": chat_id})
+        if chat_mapping is None:
             return Chat()
 
-        chat = Chat()
-        chat.__dict__.update(chat_dict)
+        chat = Chat.from_dict(dict(chat_mapping))
         return chat
 
     def save_chat(self, chat_id, chat) -> None:
-        chat_dict = chat.__dict__
+        chat_dict = chat.to_dict()
         chat_dict["chat_id"] = chat_id
         self.chats_collection.replace_one({"chat_id": chat_id}, chat_dict, upsert=True)
-
-    def clear_chat(self, chat_id, message_thread_id) -> None:
-        if message_thread_id is None:
-            self.chats_collection.delete_one({"chat_id": chat_id})
-        else:
-            chat = self.load_chat(chat_id)
-            if chat is not None:
-                del chat.threads[message_thread_id]
-                self.save_chat(chat_id, chat)
