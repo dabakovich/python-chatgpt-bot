@@ -1,3 +1,5 @@
+import re
+
 from telegram import User
 from transliterate import translit, detect_language
 from transliterate.exceptions import LanguageDetectionError
@@ -13,25 +15,25 @@ def generate_system_gpt_message(text=default_initial_context) -> GPTMessage:
     }
 
 
-# We need to generate unique name for user's message in latin characters
+# We need to generate unique name for user's message that matches ^[a-zA-Z0-9_-]{1,64}$ regex
 def generate_user_gpt_message(text: str, user: User) -> GPTMessage:
-    if user.first_name or user.last_name:
-        if user.first_name:
-            name = user.first_name
-            if user.last_name:
-                name += f"-{user.last_name}"
-        else:
-            name = user.last_name
+    name = user.first_name
+    if user.last_name:
+        name += f"-{user.last_name}"
 
-        try:
-            detected_language = detect_language(name)
-        except LanguageDetectionError:
-            detected_language = None
+    try:
+        detected_language = detect_language(name)
+    except LanguageDetectionError:
+        detected_language = None
 
-        if detected_language:
-            name = translit(name, reversed=True, language_code=detected_language)
-    else:
-        name = user.username
+    if detected_language:
+        name = translit(name, reversed=True, language_code=detected_language)
+
+    # Remove disallowed symbols
+    name = re.sub(r'[^a-zA-Z0-9_-]', '', name)
+
+    # Limit the name length to 64 characters
+    name = name[:64]
 
     name_and_id = name.strip()
     # name_and_id = f"{name.strip()}_{user.id}"
