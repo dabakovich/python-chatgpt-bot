@@ -37,12 +37,12 @@ async def context_text(update: Update, context: CallbackContext):
     chat = database.load_chat(chat_id)
 
     if message_thread_id is None:
-        chat.messages = []
+        chat.messages = None
         chat.info = update.effective_chat
         chat.system_message_text = text
     else:
         thread_info = update.effective_message.reply_to_message.forum_topic_created.to_dict()
-        chat.threads[str(message_thread_id)] = {"messages": [],
+        chat.threads[str(message_thread_id)] = {"messages": None,
                                                 "info": thread_info,
                                                 "system_message_text": text}
 

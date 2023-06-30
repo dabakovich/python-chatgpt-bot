@@ -29,10 +29,14 @@ async def send_updatable_gpt_response(update: Update, context: ContextTypes.DEFA
 
             try:
                 if message_id is None:
-                    response = await context.bot.send_message(chat_id=chat_id, text=text)
+                    response = await context.bot.send_message(chat_id=chat_id,
+                                                              message_thread_id=message_thread_id,
+                                                              text=text)
                     message_id = response.message_id
                 else:
-                    await context.bot.edit_message_text(chat_id=chat_id, message_id=message_id, text=text)
+                    await context.bot.edit_message_text(chat_id=chat_id,
+                                                        message_id=message_id,
+                                                        text=text)
 
             except Exception as e:
                 logging.error(f"Error editing message text: {e}")

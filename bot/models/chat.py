@@ -62,7 +62,7 @@ class Chat:
         if message_thread_id is not None:
             thread = self.get_thread(message_thread_id)
 
-            if "system_message_text" not in thread:
+            if "system_message_text" not in thread or thread["system_message_text"] is None:
                 thread["system_message_text"] = get_default_system_message_text(chat_type=self.info.type)
 
             system_message_text = thread["system_message_text"]
