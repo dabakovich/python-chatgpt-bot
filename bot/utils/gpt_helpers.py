@@ -43,3 +43,10 @@ def generate_user_gpt_message(text: str, user: User) -> GPTMessage:
         "content": text,
         "name": name_and_id
     }
+
+
+def generate_assistant_gpt_message(text: str) -> GPTMessage:
+    return {
+        "role": "assistant",
+        "content": text,
+    }

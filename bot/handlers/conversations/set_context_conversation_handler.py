@@ -6,7 +6,7 @@ from telegram.ext import CommandHandler, MessageHandler, ConversationHandler, fi
 
 from database.database_manager import database
 from enums import Commands
-from utils.helpers import generate_system_gpt_message
+from utils.gpt_helpers import generate_system_gpt_message
 from utils.translations import load_translation
 
 WAITING_FOR_CONTEXT_TEXT = "WAITING_FOR_CONTEXT_TEXT"

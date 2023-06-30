@@ -3,10 +3,9 @@ from typing import Dict
 
 from telegram import User as TelegramUser, Update
 
-from constants import default_initial_context
 from local_types import GPTMessage, ConversationBase
 from models.chat_info import ChatInfo
-from utils.helpers import generate_user_gpt_message
+from utils.gpt_helpers import generate_user_gpt_message, generate_system_gpt_message
 
 
 class Chat:
@@ -129,10 +128,3 @@ class Chat:
 
         chat_dict = json.loads(chat_json)
         return cls.from_dict(chat_dict)
-
-
-def generate_system_gpt_message(text=default_initial_context) -> GPTMessage:
-    return {
-        "role": "system",
-        "content": text,
-    }

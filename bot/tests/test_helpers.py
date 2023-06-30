@@ -3,7 +3,7 @@ import unittest
 from telegram import User as TelegramUser
 
 from constants import default_initial_context
-from utils.helpers import generate_user_gpt_message, generate_system_gpt_message
+from utils.gpt_helpers import generate_user_gpt_message, generate_system_gpt_message
 
 
 class TestUser(TelegramUser):
