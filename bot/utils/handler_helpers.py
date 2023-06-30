@@ -41,7 +41,12 @@ async def send_updatable_gpt_response(update: Update, context: ContextTypes.DEFA
         is_premium = user_id in PREMIUM_USER_IDS
         logging.info(f"user_id={user_id}, is_premium={is_premium}")
 
-        gpt_response = await get_gpt_response(chat.get_messages(message_thread_id), on_new_partial_text, is_premium)
+        messages = chat.get_messages(message_thread_id)
+        system_message = chat.get_system_message(message_thread_id)
+
+        messages_with_system_message = [system_message] + messages
+
+        gpt_response = await get_gpt_response(messages_with_system_message, on_new_partial_text, is_premium)
     except InvalidRequestError as e:
         logging.error(e.code)
 

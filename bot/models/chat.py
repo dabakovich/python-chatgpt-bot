@@ -5,7 +5,7 @@ from telegram import User as TelegramUser, Update
 
 from local_types import GPTMessage, ConversationBase
 from models.chat_info import ChatInfo
-from utils.gpt_helpers import generate_user_gpt_message, generate_system_gpt_message
+from utils.gpt_helpers import generate_user_gpt_message, generate_system_gpt_message, get_default_system_message_text
 
 
 class Chat:
@@ -14,6 +14,7 @@ class Chat:
                  info: ChatInfo = None,
                  users: Dict[str, TelegramUser] = None,
                  messages: list[GPTMessage] = None,
+                 system_message_text: str = None,
                  threads: Dict[str, ConversationBase] = None):
         self.chat_id = chat_id
 
@@ -26,6 +27,8 @@ class Chat:
         # Chat messages
         # Will be "General" chat messages if it's a channel with forum topics
         self.messages = messages
+
+        self.system_message_text = system_message_text
 
         # Chat threads storing by id
         # Is not None when it's a channel with topics
@@ -55,17 +58,34 @@ class Chat:
 
         messages.append(message)
 
+    def get_system_message(self, message_thread_id: int | None = None):
+        if message_thread_id is not None:
+            thread = self.get_thread(message_thread_id)
+
+            if "system_message_text" not in thread:
+                thread["system_message_text"] = get_default_system_message_text(chat_type=self.info.type)
+
+            system_message_text = thread["system_message_text"]
+        else:
+            if self.system_message_text is None:
+                self.system_message_text = get_default_system_message_text(chat_type=self.info.type)
+
+            system_message_text = self.system_message_text
+
+        return generate_system_gpt_message(system_message_text)
+
     def get_messages(self, message_thread_id: int | None = None) -> list[GPTMessage]:
         if message_thread_id is not None:
             thread = self.get_thread(message_thread_id)
 
             if "messages" not in thread or not thread["messages"]:
-                thread["messages"] = [generate_system_gpt_message()]
+                thread["messages"] = []
 
             return thread["messages"]
         else:
             if self.messages is None:
-                self.messages = [generate_system_gpt_message()]
+                self.messages = []
+
             return self.messages
 
     def get_thread(self, message_thread_id: int):
@@ -98,6 +118,7 @@ class Chat:
             "info": self.info.to_dict() if self.info is not None else None,
             "users": users_dict,
             "messages": self.messages,
+            "system_message_text": self.system_message_text,
             "threads": self.threads,
         }
 
@@ -114,8 +135,14 @@ class Chat:
                 users[user_id] = TelegramUser(**user_data)
 
         messages = chat_dict.get('messages')
+        system_message_text = chat_dict.get('system_message_text')
         threads = chat_dict.get('threads')
-        return cls(chat_id=chat_id, info=info, users=users, messages=messages, threads=threads)
+        return cls(chat_id=chat_id,
+                   info=info,
+                   users=users,
+                   messages=messages,
+                   system_message_text=system_message_text,
+                   threads=threads)
 
     def to_json(self) -> str:
         chat_dict = self.to_dict()

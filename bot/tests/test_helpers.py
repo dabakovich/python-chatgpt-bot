@@ -2,8 +2,7 @@ import unittest
 
 from telegram import User as TelegramUser
 
-from constants import default_initial_context
-from utils.gpt_helpers import generate_user_gpt_message, generate_system_gpt_message
+from utils.gpt_helpers import generate_user_gpt_message
 
 
 class TestUser(TelegramUser):
@@ -15,20 +14,6 @@ text = "Hello, how are you?"
 
 
 class TestHelper(unittest.TestCase):
-    def test_generate_system_gpt_message_with_default_text(self):
-        expected_result = {
-            "role": "system",
-            "content": default_initial_context
-        }
-        self.assertEqual(generate_system_gpt_message(), expected_result)
-
-    def test_generate_system_gpt_message_with_custom_text(self):
-        expected_result = {
-            "role": "system",
-            "content": text
-        }
-        self.assertEqual(generate_system_gpt_message(text), expected_result)
-
     def test_generate_user_gpt_message_with_first_and_last_name(self):
         user = TestUser(first_name="John", last_name="Doe")
         expected_result = {

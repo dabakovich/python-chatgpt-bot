@@ -10,3 +10,4 @@ class GPTMessage(TypedDict):
 class ConversationBase(TypedDict):
     messages: list[GPTMessage] | None
     info: NotRequired[dict]
+    system_message_text: str | None

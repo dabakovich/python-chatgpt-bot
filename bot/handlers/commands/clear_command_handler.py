@@ -16,7 +16,7 @@ async def clear_command(update: Update, context: CallbackContext):
 
     logging.info(f"clear_command -> chat_id={chat_id}, message_thread_id={message_thread_id}")
 
-    database.clear_messages(chat_id, message_thread_id)
+    database.clear_messages_and_context(chat_id, message_thread_id)
 
     await context.bot.send_message(chat_id=chat_id, message_thread_id=message_thread_id, text=load_translation(language_code, 'clear_message'))
 
