@@ -6,6 +6,7 @@ from telegram.ext import ContextTypes, MessageHandler, filters
 
 from database.database_manager import database
 from utils.handler_helpers import send_updatable_gpt_response
+from utils.helpers import get_message_thread_id
 
 
 async def on_text_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -14,7 +15,8 @@ async def on_text_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     logging.info(f"message text: {update.effective_message.text}")
 
     chat_id = update.effective_chat.id
-    message_thread_id = update.effective_message.message_thread_id
+    message_thread_id = get_message_thread_id(update)
+    logging.info(f"message_thread_id: {message_thread_id}")
 
     # Send typing action only in private chat
     if update.effective_chat.type == ChatType.PRIVATE:

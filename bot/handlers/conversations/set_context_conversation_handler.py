@@ -6,6 +6,7 @@ from telegram.ext import CommandHandler, MessageHandler, ConversationHandler, fi
 
 from database.database_manager import database
 from enums import Commands
+from utils.helpers import get_message_thread_id
 from utils.translations import load_translation
 
 WAITING_FOR_CONTEXT_TEXT = "WAITING_FOR_CONTEXT_TEXT"
@@ -14,7 +15,7 @@ WAITING_FOR_CONTEXT_TEXT = "WAITING_FOR_CONTEXT_TEXT"
 async def set_context_command(update: Update, context: CallbackContext):
     """Handle the /set_context command."""
     chat_id = update.effective_chat.id
-    message_thread_id = update.effective_message.message_thread_id
+    message_thread_id = get_message_thread_id(update)
     language_code = update.effective_user.language_code
 
     logging.info(f"chat_id={chat_id}")
@@ -28,7 +29,7 @@ async def set_context_command(update: Update, context: CallbackContext):
 
 async def context_text(update: Update, context: CallbackContext):
     chat_id = update.effective_chat.id
-    message_thread_id = update.effective_message.message_thread_id
+    message_thread_id = get_message_thread_id(update)
     text = update.message.text
     language_code = update.effective_user.language_code
 

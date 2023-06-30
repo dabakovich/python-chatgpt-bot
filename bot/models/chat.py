@@ -6,6 +6,7 @@ from telegram import User as TelegramUser, Update
 from local_types import GPTMessage, ConversationBase
 from models.chat_info import ChatInfo
 from utils.gpt_helpers import generate_user_gpt_message, generate_system_gpt_message, get_default_system_message_text
+from utils.helpers import get_message_thread_id
 
 
 class Chat:
@@ -37,7 +38,7 @@ class Chat:
     def process_telegram_update(self, update: Update):
         user = update.effective_user
         message = update.effective_message
-        message_thread_id = message.message_thread_id
+        message_thread_id = get_message_thread_id(update)
 
         self.chat_id = update.effective_chat.id
         self.info = update.effective_chat

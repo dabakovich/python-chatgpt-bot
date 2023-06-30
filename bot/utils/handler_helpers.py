@@ -7,6 +7,7 @@ from telegram.ext import ContextTypes
 from config import PREMIUM_USER_IDS
 from models.chat import Chat
 from utils.gpt import get_gpt_response
+from utils.helpers import get_message_thread_id
 from utils.translations import load_translation
 
 
@@ -14,7 +15,7 @@ async def send_updatable_gpt_response(update: Update, context: ContextTypes.DEFA
     chat_id = update.effective_chat.id
     user_id = update.effective_user.id
     language_code = update.effective_user.language_code
-    message_thread_id = update.effective_message.message_thread_id
+    message_thread_id = get_message_thread_id(update)
 
     try:
         message_id = None
