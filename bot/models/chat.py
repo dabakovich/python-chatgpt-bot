@@ -49,6 +49,7 @@ class Chat:
             thread_info = message.reply_to_message.forum_topic_created.to_dict()
             thread["info"] = thread_info
 
+        self.ensure_system_message_text_present(message_thread_id)
         self.append_message(generate_user_gpt_message(message.text, user), message_thread_id)
 
     def process_gpt_response(self, gpt_response: dict, message_thread_id: int = None):
@@ -59,21 +60,24 @@ class Chat:
 
         messages.append(message)
 
-    def get_system_message(self, message_thread_id: int | None = None):
+    def ensure_system_message_text_present(self, message_thread_id: int | None = None):
         if message_thread_id is not None:
             thread = self.get_thread(message_thread_id)
 
             if "system_message_text" not in thread or thread["system_message_text"] is None:
                 thread["system_message_text"] = get_default_system_message_text(chat_type=self.info.type)
 
-            system_message_text = thread["system_message_text"]
         else:
             if self.system_message_text is None:
                 self.system_message_text = get_default_system_message_text(chat_type=self.info.type)
 
-            system_message_text = self.system_message_text
+    def get_system_message(self, message_thread_id: int | None = None):
+        if message_thread_id is not None:
+            thread = self.get_thread(message_thread_id)
 
-        return generate_system_gpt_message(system_message_text)
+            return generate_system_gpt_message(thread["system_message_text"])
+        else:
+            return generate_system_gpt_message(self.system_message_text)
 
     def get_messages(self, message_thread_id: int | None = None) -> list[GPTMessage]:
         if message_thread_id is not None:

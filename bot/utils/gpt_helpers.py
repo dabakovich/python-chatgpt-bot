@@ -10,7 +10,7 @@ from constants import default_private_initial_context, default_group_initial_con
 from local_types import GPTMessage
 
 
-def generate_system_gpt_message(text: str) -> GPTMessage:
+def generate_system_gpt_message(text: str = default_private_initial_context) -> GPTMessage:
     now_utc_time = datetime.datetime.now(datetime.timezone.utc)
 
     text += f"\n\nAdditional context\nCurrent datetime is {now_utc_time.strftime('%a, %d %b %Y %H:%M:%S GMT')}."
