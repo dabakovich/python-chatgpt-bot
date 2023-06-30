@@ -1,14 +1,20 @@
+import datetime
 import re
 
 from telegram import User
+from telegram.constants import ChatType
 from transliterate import translit, detect_language
 from transliterate.exceptions import LanguageDetectionError
 
-from constants import default_initial_context
+from constants import default_private_initial_context, default_group_initial_context
 from local_types import GPTMessage
 
 
-def generate_system_gpt_message(text=default_initial_context) -> GPTMessage:
+def generate_system_gpt_message(text: str) -> GPTMessage:
+    now_utc_time = datetime.datetime.now(datetime.timezone.utc)
+
+    text += f"\n\nAdditional context\nCurrent datetime is {now_utc_time.strftime('%a, %d %b %Y %H:%M:%S GMT')}."
+
     return {
         "role": "system",
         "content": text,
@@ -43,3 +49,17 @@ def generate_user_gpt_message(text: str, user: User) -> GPTMessage:
         "content": text,
         "name": name_and_id
     }
+
+
+def generate_assistant_gpt_message(text: str) -> GPTMessage:
+    return {
+        "role": "assistant",
+        "content": text,
+    }
+
+
+def get_default_system_message_text(chat_type: str) -> str:
+    if chat_type == ChatType.GROUP or chat_type == ChatType.SUPERGROUP:
+        return default_group_initial_context
+    else:
+        return default_private_initial_context

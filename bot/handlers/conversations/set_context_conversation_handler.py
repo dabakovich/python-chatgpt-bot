@@ -6,7 +6,6 @@ from telegram.ext import CommandHandler, MessageHandler, ConversationHandler, fi
 
 from database.database_manager import database
 from enums import Commands
-from utils.helpers import generate_system_gpt_message
 from utils.translations import load_translation
 
 WAITING_FOR_CONTEXT_TEXT = "WAITING_FOR_CONTEXT_TEXT"
@@ -37,13 +36,15 @@ async def context_text(update: Update, context: CallbackContext):
 
     chat = database.load_chat(chat_id)
 
-    system_gpt_message = generate_system_gpt_message(text)
-
     if message_thread_id is None:
-        chat.messages = [system_gpt_message]
+        chat.messages = None
+        chat.info = update.effective_chat
+        chat.system_message_text = text
     else:
         thread_info = update.effective_message.reply_to_message.forum_topic_created.to_dict()
-        chat.threads[str(message_thread_id)] = {"messages": [system_gpt_message], "info": thread_info}
+        chat.threads[str(message_thread_id)] = {"messages": None,
+                                                "info": thread_info,
+                                                "system_message_text": text}
 
     database.save_chat(chat_id, chat)
 
