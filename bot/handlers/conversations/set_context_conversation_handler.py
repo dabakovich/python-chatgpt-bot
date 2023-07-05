@@ -43,9 +43,10 @@ async def context_text(update: Update, context: CallbackContext):
         chat.system_message_text = text
     else:
         thread_info = update.effective_message.reply_to_message.forum_topic_created.to_dict()
-        chat.threads[str(message_thread_id)] = {"messages": None,
-                                                "info": thread_info,
-                                                "system_message_text": text}
+        threads = chat.get_threads()
+        threads[str(message_thread_id)] = {"messages": None,
+                                           "info": thread_info,
+                                           "system_message_text": text}
 
     database.save_chat(chat_id, chat)
 
