@@ -1,4 +1,4 @@
-from typing import TypedDict, NotRequired
+from typing import Dict, TypedDict, NotRequired
 
 
 class GPTMessage(TypedDict):
@@ -7,7 +7,7 @@ class GPTMessage(TypedDict):
     name: NotRequired[str]
 
 
-class ConversationBase(TypedDict):
+class ConversationBase(Dict):
     messages: list[GPTMessage] | None
-    info: NotRequired[dict]
+    info: dict | None
     system_message_text: str | None

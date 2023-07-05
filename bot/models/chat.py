@@ -96,13 +96,18 @@ class Chat:
     def get_thread(self, message_thread_id: int):
         message_thread_id_str = str(message_thread_id)
 
+        threads = self.get_threads()
+
+        if message_thread_id_str not in threads:
+            self.threads[message_thread_id_str] = ConversationBase()
+
+        return self.threads[message_thread_id_str]
+
+    def get_threads(self) -> Dict[str, ConversationBase]:
         if self.threads is None:
             self.threads = {}
 
-        if message_thread_id_str not in self.threads:
-            self.threads[message_thread_id_str] = {}
-
-        return self.threads[message_thread_id_str]
+        return self.threads
 
     def save_user(self, user: TelegramUser):
         if self.users is None:
